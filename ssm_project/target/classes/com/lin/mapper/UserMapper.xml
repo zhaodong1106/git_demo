@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lin.dao.UserDao">  
+<!--设置domain类和数据库中表的字段一一对应，注意数据库字段和domain类中的字段名称不致，此处一定要！-->  
+    <resultMap id="BaseResultMap" type="com.lin.domain.User">  
+        <id column="USER_ID" property="userId" jdbcType="INTEGER" />  
+        <result column="USER_NAME" property="userName" jdbcType="CHAR" />  
+        <result column="USER_PASSWORD" property="userPassword" jdbcType="CHAR" />  
+        <result column="USER_EMAIL" property="userEmail" jdbcType="CHAR" />
+      	<result column="CLASS_ID"  property="classesId"/>
+        <association  property="classes"  javaType="com.lin.domain.Classes" >
+        	<id column="CLASS_ID" property="classId"/>
+        	<result column="CLASS_NAME" property="className"/>
+        </association>  
+    </resultMap> 
+    <resultMap type="com.lin.vo.User1" id="BaseResultMap2">
+    	<id  column="USER_ID" property="userId" />
+    	<result column="USER_NAME" property="userName"/>
+    	<association property="classes" javaType="com.lin.domain.Classes">
+    		<id column="CLASS_ID" property="classId"/>
+        	<result column="CLASS_NAME" property="className"/>
+    	</association>
+    
+    
+    </resultMap> 
+    <!-- 查询单条记录 -->  
+    <select id="selectUserById" parameterType="Integer" resultMap="BaseResultMap">  
+        SELECT u.*,c.class_name FROM t_user u LEFT OUTER JOIN t_class c ON u.class_id=c.class_id WHERE u.user_id=#{userId}  
+    </select> 
+    <!-- 通过classid查询 -->
+    <select id="selectUserByClassid" parameterType="int" resultMap="BaseResultMap2">
+    	select u.* from t_user u where u.class_id=#{id} 
+    </select>
+    <!-- 查询所有记录 -->
+    <select id="selectUserAll" resultMap="BaseResultMap">
+    	select * from t_user
+    </select> 
+    <!-- 删除一条记录 -->
+    <delete id="delete" parameterType="int">
+    	delete from t_user where user_id=#{id}
+    </delete>
+    <!-- 更改一条记录 -->
+   <update id="update" parameterType="com.lin.domain.User">
+   		update t_user set USER_NAME=#{userName},USER_PASSWORD=#{userPassword},USER_EMAIL=#{userEmail},CLASS_ID=#{classesId} where user_id=#{userId}
+   </update> 
+    <!-- 模糊查询姓名 -->
+    <select id="selectUserLike" parameterType="String" resultMap="BaseResultMap">
+    	select * from t_user where user_name like CONCAT(CONCAT('%',#{description}),'%')
+    </select>
+    <!--插入一条记录  -->
+    <insert id="insert" parameterType="com.lin.domain.User">
+    	insert into t_user(USER_NAME,USER_PASSWORD,USER_EMAIL,CLASS_ID) values(#{userName},#{userPassword},#{userEmail},#{classesId})
+    </insert>
+    <!-- 通过内连接查询 -->
+    <select id="selectAllUserJoinClass" parameterType="int" resultMap="BaseResultMap">
+    	SELECT u.*,c.class_name FROM t_user u LEFT OUTER JOIN t_class c ON u.class_id=c.class_id 
+    </select>
+       	<!-- 批量插入 -->
+   	<insert id="insertBatch" parameterType="com.lin.domain.User">
+   		insert into t_user(USER_NAME,USER_PASSWORD,USER_EMAIL) VALUES
+   		<foreach collection="list" index="index" item="item" separator=",">
+   		(#{item.userName},#{item.userPassword},#{item.userEmail})
+   		</foreach>
+   	</insert>
+   	<!-- 批量删除 -->
+   	<delete id="deleteBatch" parameterType="int">
+   		delete from t_user where user_id in
+   		<foreach collection="array" index="index" item="id" open="(" separator="," close=")">
+   		#{id}
+   		</foreach>
+   	</delete>
+   	<!-- checkUserValidate -->
+   	<select id="selectUserByName" parameterType="String" resultType="int" >
+   		select count(user_id) from t_user where user_name=#{name}
+   	</select>	
+   	<!-- checkEmailValidate -->
+   	<select id="selectUserByEmail" parameterType="String" resultType="int" >
+   		select count(user_id) from t_user where user_email=#{email}
+   	</select>	
+   	<!-- checkPasswordValidate -->
+   	<select id="checkPasswordByName" parameterType="String" resultMap="BaseResultMap">
+   		select user_id,user_password from t_user where user_name=#{name}
+   	</select>
+</mapper> 

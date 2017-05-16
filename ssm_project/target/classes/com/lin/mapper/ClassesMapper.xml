@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lin.dao.ClassDao">  
+<!--设置domain类和数据库中表的字段一一对应，注意数据库字段和domain类中的字段名称不致，此处一定要！-->  
+    <resultMap id="BaseResultMap" type="com.lin.domain.Classes">  
+        <id column="CLASS_ID" property="classId"  />  
+        <result column="CLASS_NAME" property="className"  />  
+ 		<collection property="list"  ofType="com.lin.domain.User">
+ 			<id column="USER_ID" property="userId"/>
+ 			<result column="USER_NAME" property="userName"/>
+ 			<result column="USER_PASSWORD" property="userPassword"/>
+ 			<result  column="USER_EMAIL" property="userEmail"/>
+ 			<result  column="CLASS_ID" property="classesId" />
+ 		</collection>
+    </resultMap>
+    <!-- 查询某个classes -->
+    <select id="selectClassesById" parameterType="int" resultMap="BaseResultMap">
+    	select * from t_class where class_id=#{classId}
+    </select>
+    <!-- 查询全部 -->  
+	<select id="selectClasses" resultMap="BaseResultMap">
+		select c.class_id,c.class_name from t_class c
+	</select>
+	<!-- 回显用查询除某个id外的所有集合 -->
+	<select id="selectClassesExceptOne" parameterType="int" resultMap="BaseResultMap">
+		select c.class_id,c.class_name from t_class c where c.class_id<![CDATA[<>]]>#{id}
+	</select>
+    <!-- 通过class_id查询class上的字段 -->
+    <select id="selectClassFetchUser" parameterType="String" resultMap="BaseResultMap">
+    	select c.*,u.* from t_user u,t_class c where c.class_id=u.class_id and c.class_name=#{name}
+    </select>
+    <!-- 批量插入 -->
+    <insert id="insertBatch" parameterType="List">
+    	insert into t_class(CLASS_NAME) VALUES
+    	<foreach collection="List" index="index"   separator=","  item="item">
+    		(#{item.className})
+    	</foreach>
+    </insert>
+    <!-- 插入一条语句 -->
+    <insert id="insert" parameterType="com.lin.domain.Classes" >
+    	insert into t_class(CLASS_NAME) values(#{className})
+    </insert>
+</mapper> 

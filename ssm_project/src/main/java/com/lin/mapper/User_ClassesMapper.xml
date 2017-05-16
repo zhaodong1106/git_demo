@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lin.dao.User_ClassesDao">  
+<!--设置domain类和数据库中表的字段一一对应，注意数据库字段和domain类中的字段名称不致，此处一定要！-->  
+    <resultMap id="BaseResultMap" type="com.lin.domain.User_Classes">  
+        <result column="USER_ID" property="userId" />  
+        <result column="CLASS_ID" property="classId" />  
+ 
+    </resultMap>  
+ 	
+    <!--插入一条记录  -->
+    <insert id="insert" parameterType="com.lin.domain.User_Classes">
+    	insert into t_user_classes(USER_ID,CLASS_ID) values(#{userId},#{classId})
+    </insert>
+    <!-- 通过class_id查询class上的字段 -->
+    <select id="selectUserFetchClass" parameterType="int" resultMap="BaseResultMap">
+    	select c.*,u.* from t_class c inner join t_user_classes uc on c.class_id=uc.class_id inner join t_user u on uc.user_id=u.user_id where u.user_id=#{id}
+    </select>
+       	<!-- 批量插入 -->
+   	<insert id="insertBatch" parameterType="List">
+   		insert into t_user(USER_NAME,USER_PASSWORD,USER_EMAIL) VALUES
+   		<foreach collection="List" index="index" item="item" separator=",">
+   		(#{item.userName},#{item.userPassword},#{item.userEmail})
+   		</foreach>
+   	</insert>
+</mapper> 
