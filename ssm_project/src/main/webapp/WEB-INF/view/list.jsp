@@ -27,8 +27,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     
     <br>
     userId:${user.userId }<br>
-         姓名123：${user.userName}<br>
-         密码123：${user.userPassword }<br>
+         姓名1234：${user.userName}<br>
+         密码1234：${user.userPassword }<br>
     email1：${user.userEmail }<br>
 
   </body>
