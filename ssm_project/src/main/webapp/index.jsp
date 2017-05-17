@@ -180,7 +180,7 @@
 		</div>
 		</div>
 		<div class="form-group">
-		<label for="userEmail" class="col-sm-1 control-label">邮箱</label>
+		<label for="userEmail" class="col-sm-1 control-label">邮箱1</label>
 		<div class="col-sm-3">
 		<input id="userEmail" name="userEmail" type="text" class="form-control"  placeholder="请输入邮箱" />
 		</div>
