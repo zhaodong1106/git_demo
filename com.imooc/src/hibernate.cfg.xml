@@ -1,0 +1,39 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+	"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+	<session-factory>
+  <!--       <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>  
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/User_2</property>  
+        <property name="hibernate.connection.username">root</property>  
+        <property name="hibernate.connection.password"></property>  -->
+          
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>  
+        <property name="hbm2ddl.auto">update</property>  
+        <property name="hibernate.show_sql">true</property>
+       
+         <property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</property>
+         <property name="hibernate.cache.use_second_level_cache">false</property>
+         <property name="hibernate.cache.use_query_cache">false</property>
+         
+         
+	<mapping class="com.imooc.usermgr.entity.User_1"/>
+     <mapping class="com.imooc.usermgr.entity.Log"/>
+         <!--  
+         <mapping resource="com/imooc/User.hbm.xml" /> 
+          <mapping resource="com/imooc/User.hbm2.xml" />-->
+          
+        <!--  <mapping resource="com/imooc/Students.hbm.xml"/> 
+         <mapping resource="com/imooc/Class.hbm.xml"/>  -->
+      <!-- <mapping resource="com/imooc/User_more2one.hbm.xml" /> 
+        <mapping resource="com/imooc/Group_more2one.hbm.xml" /> -->
+       <!--  <mapping resource="com/imooc/Person.hbm.xml" />
+        <mapping resource="com/imooc/IdCard.hbm.xml" /> -->
+        <!-- <mapping resource="com/zhaodong/User.hbm.xml" />
+        <mapping resource="com/zhaodong/Role.hbm.xml" /> 
+        <mapping resource="com/zhaodong/Animal.hbm.xml" /> -->
+        <!-- <mapping resource="com/imooc/usermgr/manager/User2.hbm.xml" />
+       <class-cache usage="read-only" class="com.imooc.usermgr.manager.User2"/> -->
+	</session-factory>
+</hibernate-configuration>
