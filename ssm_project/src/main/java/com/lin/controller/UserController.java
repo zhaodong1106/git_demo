@@ -158,11 +158,13 @@ public class UserController {
 	@RequestMapping("/testDownload")
 	public ResponseEntity<byte[]> testDownload(HttpServletRequest request) throws IOException{
 		byte[] body=null;
-		InputStream in=request.getSession().getServletContext().getResourceAsStream("files/oracle�Ļ�ͼ.jpg");
+		InputStream in=request.getSession().getServletContext().getResourceAsStream("files/oracleµÄ»ÆÍ¼.jpg");
 		body=new byte[in.available()];
 		in.read(body);
 		HttpHeaders headers=new HttpHeaders();
-		headers.add("Content-Disposition", "attachment;filename=oracle"+URLEncoder.encode("�Ļ�ͼ","UTF-8")+".jpg");
+// 		URLEncoder.encode解析汉字格式
+		headers.add("Content-Disposition", "attachment;filename=oracle"+URLEncoder.encode("µÄ»ÆÍ¼","UTF-8")+".jpg");
+
 		HttpStatus statusCode=HttpStatus.OK;
 		ResponseEntity<byte[]> response=new ResponseEntity<byte[]>(body, headers, statusCode);
 		return response;
