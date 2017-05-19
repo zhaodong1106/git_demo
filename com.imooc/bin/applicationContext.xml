@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xmlns:tx="http://www.springframework.org/schema/tx"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+    	<property name="configLocations">
+    		<value>classpath:hibernate.cfg.xml</value>
+    		
+    	</property>
+    	<property name="dataSource" ref="dataSource"/>
+
+    	
+    </bean>
+    
+    <!-- datasource -->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://localhost:3306/User_2" />
+        <property name="username" value="root" />
+        <property name="password" value="" />
+	</bean>
+    <!-- 配置失误管理器 -->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+    	<property name="sessionFactory" ref="sessionFactory" />
+    	<property name="dataSource" ref="dataSource"/>	
+    </bean>
+    
+<!--     <aop:config>
+    	<aop:pointcut expression="execution(* com.imooc.usermgr.manager.*.*(..))" id="allUserManagerMethod"/>
+    	<aop:advisor advice-ref="txAdvice" pointcut-ref="allUserManagerMethod"/>
+    </aop:config>
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+    	<tx:attributes>
+    		<tx:method name="add*" propagation="REQUIRED"/>
+    		<tx:method name="modify*" propagation="REQUIRED"/>
+    		<tx:method name="del*" propagation="REQUIRED"/>
+    		<tx:method name="*" propagation="REQUIRED" read-only="true"/>
+    	</tx:attributes>
+    </tx:advice> -->
+    <!-- 开启事务注解 -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <!-- 基于news这个包自动扫描其中的类 ,也会自动注入解析器-->
+	 <context:component-scan base-package="com.imooc.usermgr"></context:component-scan>
+    
+</beans>

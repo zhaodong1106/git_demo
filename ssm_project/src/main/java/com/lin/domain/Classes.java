@@ -1,8 +1,9 @@
 package com.lin.domain;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Classes {
+public class Classes implements Serializable{
 	private int classId;
 	private String className;
 	private List<User> list;
