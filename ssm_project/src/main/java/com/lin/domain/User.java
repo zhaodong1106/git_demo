@@ -1,8 +1,18 @@
 package com.lin.domain;
 
+import java.io.Serializable;
 
-public class User {
-    private Integer userId;  
+
+public class User implements Serializable{
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1711044863460625797L;
+	/**
+	 * 
+	 */
+	
+	private Integer userId;  
     private String userName;  
     private String userPassword;  
     private String userEmail;

@@ -1,20 +1,37 @@
 package com.lin.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
+import javax.annotation.Resource;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.serializer.JacksonJsonRedisSerializer;
+import org.springframework.stereotype.Repository;
 
 
 import com.github.pagehelper.PageHelper;
 import com.lin.baseTest.SpringTestCase;
 import com.lin.domain.User;
+import com.lin.redis.UserRedisDaoImpl;
 import com.lin.vo.User1;
 
 public class UserServiceTest extends SpringTestCase {
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private StringRedisTemplate stringRedisTemplate;
+	
+	
+	@Autowired
+	private RedisTemplate<String,List<User>> redisTemplate;
 	@Test
 	public void testSelectUserById(){
 		User user=(User)userService.selectUserById(1);
@@ -38,8 +55,29 @@ public class UserServiceTest extends SpringTestCase {
 
 	@Test
 	public void selectAllUserJoinClass(){
-		List<User> list=userService.selectAllUserJoinClass();
-
+		
+		List<User> list=redisTemplate.opsForValue().get("list100");
+		if(list==null){
+		 list=userService.selectAllUserJoinClass();
+		 redisTemplate.opsForValue().set("list100", list);
+		}
+		for(User user:list){
+		System.out.println(user);}
+		
+		
+		
+		
+			
+			
+			
+			
+//		}
+		
+		
+	}
+	@Test
+	public void testSpringDataRedis(){
+		List<User> list=(List<User>) redisTemplate.opsForValue().get("list100");
 		for(User user:list){
 			System.out.println(user);
 		}
@@ -69,7 +107,7 @@ public class UserServiceTest extends SpringTestCase {
 	}
 	@Test
 	public void testSelectUserByName(){
-		int a=userService.selectUserByName("ÕÔ¶°1");
+		int a=userService.selectUserByName("ï¿½Ô¶ï¿½1");
 		System.out.println(a);
 	}
 	@Test
