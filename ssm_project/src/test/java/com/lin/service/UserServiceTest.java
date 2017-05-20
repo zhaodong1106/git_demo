@@ -3,6 +3,7 @@ package com.lin.service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -13,8 +14,11 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.ZSetOperations.TypedTuple;
 import org.springframework.data.redis.serializer.JacksonJsonRedisSerializer;
 import org.springframework.stereotype.Repository;
+
+import redis.clients.jedis.Tuple;
 
 
 import com.github.pagehelper.PageHelper;
@@ -32,6 +36,8 @@ public class UserServiceTest extends SpringTestCase {
 	
 	@Autowired
 	private RedisTemplate<String,List<User>> redisTemplate;
+//	@Autowired
+//	private RedisTemplate<String, String> redisTemplate1;
 	@Test
 	public void testSelectUserById(){
 		User user=(User)userService.selectUserById(1);
@@ -56,7 +62,7 @@ public class UserServiceTest extends SpringTestCase {
 	@Test
 	public void selectAllUserJoinClass(){
 		
-		List<User> list=redisTemplate.opsForValue().get("list100");
+		List<User> list=(List<User>) redisTemplate.opsForValue().get("list100");
 		if(list==null){
 		 list=userService.selectAllUserJoinClass();
 		 redisTemplate.opsForValue().set("list100", list);
@@ -75,9 +81,20 @@ public class UserServiceTest extends SpringTestCase {
 		
 		
 	}
+	
+	@Test
+	public void testRedis2(){
+		stringRedisTemplate.opsForZSet().add("studentScore", "李伟", 124);
+		stringRedisTemplate.opsForZSet().add("studentScore", "赵俊生", 135);
+		Set<TypedTuple<String>> set1=stringRedisTemplate.opsForZSet().reverseRangeWithScores("studentScore", 0, 10);
+		for(TypedTuple<String> string1:set1){
+			System.out.println("学生："+string1.getValue()+" 分数："+string1.getScore());
+		}
+	}
+	
 	@Test
 	public void testSpringDataRedis(){
-		List<User> list=(List<User>) redisTemplate.opsForValue().get("list100");
+		List<User> list=redisTemplate.opsForValue().get("list100");
 		for(User user:list){
 			System.out.println(user);
 		}
